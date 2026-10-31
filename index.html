@@ -8,6 +8,8 @@
 <meta name="theme-color" content="#0a0a0b">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://firestore.googleapis.com">
+<link rel="preconnect" href="https://res.cloudinary.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{--font-title:'Playfair Display',serif;--font-body:'Inter',sans-serif;--r:22px;--t:.35s cubic-bezier(.2,.8,.2,1)}
@@ -23,6 +25,8 @@ html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-height:1.65;-webkit-font-smoothing:antialiased;overflow-x:hidden;transition:background var(--t),color var(--t)}
 body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(ellipse 60% 40% at 50% -10%,var(--glow),transparent 70%),radial-gradient(ellipse 40% 30% at 100% 100%,var(--glow),transparent 70%)}
 ::selection{background:var(--soft);color:var(--bg)}
+.skip-link{position:absolute;left:-9999px;top:0;background:var(--card);color:var(--text);padding:10px 16px;border-radius:0 0 8px 0;z-index:9999}
+.skip-link:focus{left:0}
 
 /* HEADER */
 header{position:sticky;top:0;z-index:100;background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);border-bottom:1px solid var(--border);padding:13px 22px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
@@ -84,28 +88,35 @@ nav a:hover{color:var(--soft);background:var(--bg2)}
 .chip{background:var(--bg2);border:1px solid var(--border);color:var(--muted);padding:7px 15px;border-radius:999px;font-size:11.5px;font-weight:500;cursor:pointer;transition:.25s;white-space:nowrap;font-family:var(--font-body)}
 .chip:hover{color:var(--soft);border-color:var(--soft)}
 .chip.active{background:var(--grad);color:var(--bg);border-color:transparent;font-weight:700}
-
 .catalog-slider{display:flex;gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;padding:14px 24px 26px;scrollbar-width:none}
 .catalog-slider::-webkit-scrollbar{display:none}
-.product-card{flex:0 0 min(280px,78vw);scroll-snap-align:start;background:linear-gradient(165deg,var(--card),var(--card2));border:1px solid var(--border);border-radius:var(--r);overflow:hidden;transition:transform .4s cubic-bezier(.2,.8,.2,1),border-color .35s,box-shadow .4s;display:flex;flex-direction:column}
+.product-card{flex:0 0 min(280px,78vw);scroll-snap-align:start;background:linear-gradient(165deg,var(--card),var(--card2));border:1px solid var(--border);border-radius:var(--r);overflow:hidden;transition:transform .4s cubic-bezier(.2,.8,.2,1),border-color .35s,box-shadow .4s;display:flex;flex-direction:column;cursor:pointer;position:relative}
 .product-card:hover{transform:translateY(-6px);border-color:var(--soft);box-shadow:0 24px 50px -20px rgba(0,0,0,.6)}
 .product-img-wrap{position:relative;overflow:hidden}
 .product-img{width:100%;height:180px;object-fit:cover;display:block;transition:transform .6s;background:var(--bg2)}
 .product-card:hover .product-img{transform:scale(1.07)}
-.product-price-badge{position:absolute;top:12px;right:12px;background:var(--grad);color:var(--bg);font-size:11.5px;font-weight:700;padding:6px 12px;border-radius:999px;box-shadow:0 6px 20px -6px var(--glow)}
-.product-body{padding:18px;display:flex;flex-direction:column;flex:1}
-.product-title{font-family:var(--font-title);font-size:17.5px;font-weight:600;margin-bottom:6px;line-height:1.3}
-.product-desc{font-size:12.5px;color:var(--muted);font-weight:300;margin-bottom:16px;flex:1;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.product-badges{position:absolute;top:10px;left:10px;display:flex;flex-direction:column;gap:4px;z-index:2}
+.badge-tag{font-size:9.5px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;padding:4px 8px;border-radius:6px;color:#fff}
+.badge-best{background:linear-gradient(100deg,#ff6b35,#f7c948)}
+.badge-new{background:linear-gradient(100deg,#4ade80,#22c55e)}
+.wishlist-btn{position:absolute;top:10px;right:10px;background:rgba(0,0,0,.5);backdrop-filter:blur(8px);border:none;width:32px;height:32px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;transition:.25s;z-index:2}
+.wishlist-btn:hover{transform:scale(1.1);background:rgba(0,0,0,.7)}
+.wishlist-btn.active{background:#ff4757}
+.product-body{padding:16px;display:flex;flex-direction:column;flex:1}
+.product-title{font-family:var(--font-title);font-size:17px;font-weight:600;margin-bottom:4px;line-height:1.3}
+.product-rating{font-size:11.5px;color:var(--soft);margin-bottom:8px;display:flex;align-items:center;gap:4px;min-height:16px}
+.product-rating .star-ico{color:#f7c948}
+.product-desc{font-size:12.5px;color:var(--muted);font-weight:300;margin-bottom:14px;flex:1;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .product-footer{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:auto}
 .product-price{font-weight:700;font-size:15px;color:var(--soft)}
-.btn-cart{background:var(--grad);color:var(--bg);border:none;padding:9px 15px;border-radius:999px;font-size:11px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;cursor:pointer;transition:.3s;display:inline-flex;align-items:center;gap:6px;font-family:var(--font-body)}
+.btn-cart{background:var(--grad);color:var(--bg);border:none;padding:8px 14px;border-radius:999px;font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;cursor:pointer;transition:.3s;font-family:var(--font-body);display:inline-flex;align-items:center;gap:4px}
 .btn-cart:hover{filter:brightness(1.12);transform:scale(1.04)}
 .btn-cart.added{background:var(--soft);color:var(--bg)}
 .skeleton-card{flex:0 0 min(280px,78vw);border-radius:var(--r);overflow:hidden;border:1px solid var(--border)}
 .skeleton{background:linear-gradient(90deg,var(--card) 25%,var(--card2) 50%,var(--card) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite}
 @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
 .skeleton-card .s-img{height:180px}
-.skeleton-card .s-body{padding:18px}
+.skeleton-card .s-body{padding:16px}
 .skeleton-card .s-line{height:12px;margin-bottom:10px;border-radius:6px}
 .skeleton-card .s-line.short{width:60%}
 .empty-state{text-align:center;padding:40px 20px;color:var(--muted);font-size:13px;width:100%}
@@ -114,7 +125,7 @@ nav a:hover{color:var(--soft);background:var(--bg2)}
 /* FEED */
 .feed-wrap{max-width:640px;margin:0 auto;padding:0 20px 70px;animation:fadeUp .8s .2s ease both}
 .feed{display:flex;flex-direction:column;gap:26px}
-.post{background:linear-gradient(165deg,var(--card),var(--card2));border:1px solid var(--border);border-radius:var(--r);overflow:hidden;transition:border-color .35s;animation:fadeUp .6s ease both}
+.post{background:linear-gradient(165deg,var(--card),var(--card2));border:1px solid var(--border);border-radius:var(--r);overflow:hidden;animation:fadeUp .6s ease both}
 .post:hover{border-color:color-mix(in srgb,var(--soft) 40%,var(--border))}
 .post-head{display:flex;align-items:center;gap:12px;padding:20px 22px 14px}
 .avatar{width:44px;height:44px;border-radius:50%;flex-shrink:0;background:var(--grad);display:flex;align-items:center;justify-content:center;font-family:var(--font-title);font-weight:700;color:var(--bg);font-size:18px;box-shadow:0 4px 14px -4px var(--glow)}
@@ -125,7 +136,7 @@ nav a:hover{color:var(--soft);background:var(--bg2)}
 .post-menu button{background:transparent;border:none;color:var(--muted);width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:15px;transition:.25s}
 .post-menu button:hover{background:var(--bg2);color:var(--soft)}
 .post .caption{padding:0 22px 14px;font-size:14.5px;font-weight:300;opacity:.94;line-height:1.6;white-space:pre-wrap;word-break:break-word}
-.post-location{padding:0 22px 14px;font-size:12px;color:var(--soft);display:flex;align-items:center;gap:6px;font-weight:500;text-decoration:none;transition:.2s}
+.post-location{padding:0 22px 14px;font-size:12px;color:var(--soft);display:flex;align-items:center;gap:6px;font-weight:500;text-decoration:none}
 a.post-location:hover{text-decoration:underline}
 .post-media-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:4px;border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:#000}
 .post-media-grid img,.post-media-grid video{width:100%;height:230px;object-fit:cover;display:block;cursor:pointer;transition:opacity .2s;background:#111}
@@ -161,7 +172,7 @@ a.post-location:hover{text-decoration:underline}
 .comment-form button{background:var(--grad);color:var(--bg);border:none;border-radius:999px;padding:0 18px;font-family:var(--font-body);font-weight:700;font-size:11px;letter-spacing:.6px;text-transform:uppercase;cursor:pointer;transition:.3s}
 .comment-form button:hover{filter:brightness(1.1);transform:scale(1.03)}
 
-/* CART DRAWER */
+/* CART */
 .cart-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(3px);z-index:500;opacity:0;visibility:hidden;transition:.35s}
 .cart-overlay.open{opacity:1;visibility:visible}
 .cart-drawer{position:fixed;top:0;right:0;height:100%;width:min(420px,92vw);background:var(--bg);border-left:1px solid var(--border);z-index:501;transform:translateX(100%);transition:transform .4s cubic-bezier(.2,.8,.2,1);display:flex;flex-direction:column;box-shadow:-20px 0 60px rgba(0,0,0,.5)}
@@ -189,10 +200,48 @@ a.post-location:hover{text-decoration:underline}
 .btn-checkout:hover{filter:brightness(1.1);transform:translateY(-1px)}
 .btn-checkout:disabled{opacity:.5;cursor:not-allowed;transform:none}
 
+/* MODALS */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.82);backdrop-filter:blur(6px);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px;animation:fadeIn .25s ease}
+.modal-overlay.open{display:flex}
+.modal-panel{background:var(--card);border:1px solid var(--border);border-radius:20px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;box-shadow:0 30px 60px -20px rgba(0,0,0,.7);animation:fadeUp .3s ease;position:relative}
+.modal-x{position:absolute;top:14px;right:14px;background:rgba(0,0,0,.55);backdrop-filter:blur(8px);border:none;color:#fff;width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:15px;z-index:2;display:flex;align-items:center;justify-content:center;transition:.2s}
+.modal-x:hover{background:rgba(0,0,0,.75);transform:rotate(90deg)}
+.pm-img{width:100%;height:240px;object-fit:cover;border-radius:20px 20px 0 0;display:block;background:var(--bg2)}
+.pm-body{padding:22px}
+.pm-title{font-family:var(--font-title);font-size:24px;font-weight:700;margin-bottom:8px;line-height:1.2}
+.pm-rating{font-size:14px;color:var(--soft);margin-bottom:14px;display:flex;align-items:center;gap:6px}
+.pm-rating .star-ico{color:#f7c948}
+.pm-desc{font-size:14px;color:var(--muted);line-height:1.65;margin-bottom:18px;white-space:pre-wrap;word-break:break-word}
+.pm-price{font-size:22px;font-weight:700;color:var(--soft);margin-bottom:18px}
+.pm-actions{display:flex;gap:10px;margin-bottom:20px}
+.pm-actions button{flex:1;justify-content:center;padding:12px 20px;font-size:12px}
+.pm-rate-section{border-top:1px solid var(--border);padding-top:16px}
+.pm-rate-section p{font-size:13px;color:var(--muted);margin-bottom:10px;font-weight:500}
+.rate-stars{display:flex;gap:4px;margin-bottom:8px}
+.rate-stars button{background:transparent;border:none;font-size:32px;color:var(--muted);cursor:pointer;transition:.2s;padding:0;line-height:1}
+.rate-stars button:hover,.rate-stars button.hover,.rate-stars button.active{color:#f7c948;transform:scale(1.1)}
+.rate-info{font-size:11.5px;color:var(--muted);margin-top:6px}
+.rate-info.done{color:var(--soft)}
+
+/* FORM CHECKOUT */
+.form-body{padding:24px}
+.form-body h3{font-family:var(--font-title);font-size:22px;font-weight:600;margin-bottom:6px}
+.form-body .sub{font-size:12.5px;color:var(--muted);margin-bottom:20px}
+.form-body label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px;font-weight:500}
+.form-body input,.form-body select,.form-body textarea{width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:11px 14px;color:var(--text);font-family:var(--font-body);font-size:13.5px;outline:none;margin-bottom:14px;transition:.3s}
+.form-body input:focus,.form-body select:focus,.form-body textarea:focus{border-color:var(--soft);box-shadow:0 0 0 3px var(--glow)}
+.form-body textarea{resize:vertical;min-height:60px}
+.form-body .btn-submit-form{width:100%;padding:14px;border:none;border-radius:12px;background:var(--grad);color:var(--bg);font-family:var(--font-body);font-weight:700;font-size:13px;letter-spacing:.5px;text-transform:uppercase;cursor:pointer;transition:.3s;display:flex;align-items:center;justify-content:center;gap:8px}
+.form-body .btn-submit-form:hover{filter:brightness(1.1);transform:translateY(-1px)}
+.summary{background:var(--bg2);border-radius:12px;padding:14px;margin-bottom:16px;font-size:13px}
+.summary .row{display:flex;justify-content:space-between;padding:4px 0}
+.summary .row.total{border-top:1px solid var(--border);padding-top:10px;margin-top:8px;font-weight:700;font-size:15px}
+.summary .row.total span:last-child{color:var(--soft)}
+
 /* LIGHTBOX */
 #lightbox{position:fixed;inset:0;background:rgba(0,0,0,.94);z-index:9999;display:none;align-items:center;justify-content:center;padding:20px;animation:fadeIn .25s ease}
 #lightbox.open{display:flex}
-#lightbox img,#lightbox video{max-width:92%;max-height:90vh;object-fit:contain;border-radius:10px;box-shadow:0 20px 80px rgba(0,0,0,.8)}
+#lightbox img,#lightbox video{max-width:92%;max-height:90vh;object-fit:contain;border-radius:10px}
 #lightboxClose,#lightboxPrev,#lightboxNext{position:absolute;background:rgba(255,255,255,.12);color:#fff;border:none;width:44px;height:44px;border-radius:50%;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s;backdrop-filter:blur(8px)}
 #lightboxClose{top:22px;right:26px}
 #lightboxClose:hover{background:rgba(255,255,255,.28);transform:rotate(90deg)}
@@ -201,37 +250,25 @@ a.post-location:hover{text-decoration:underline}
 #lightboxPrev:hover,#lightboxNext:hover{background:rgba(255,255,255,.28)}
 
 /* FOOTER */
-footer{text-align:center;padding:50px 20px 40px;border-top:1px solid var(--border);margin-top:20px;display:flex;flex-direction:column;align-items:center;gap:14px}
+footer{text-align:center;padding:50px 20px 100px;border-top:1px solid var(--border);margin-top:20px;display:flex;flex-direction:column;align-items:center;gap:14px}
 footer .brand{font-size:20px}
 .footer-hours{display:inline-flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);background:var(--bg2);border:1px solid var(--border);padding:8px 18px;border-radius:999px}
 footer p{color:var(--muted);font-size:11px;letter-spacing:1.2px;text-transform:uppercase}
 #adminLoginTrigger{background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:11px;letter-spacing:1.2px;margin-top:4px;opacity:.55;transition:.25s;padding:6px 12px;border-radius:999px}
 #adminLoginTrigger:hover{opacity:1;color:var(--soft);background:var(--bg2)}
 
-/* MODAL */
-#adminModal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:1000;align-items:center;justify-content:center;backdrop-filter:blur(6px);padding:20px;animation:fadeIn .25s ease}
-#adminModal.open{display:flex}
-.modal-box{background:var(--card);padding:28px;border-radius:20px;border:1px solid var(--border);width:100%;max-width:340px;text-align:center;box-shadow:0 30px 60px -20px rgba(0,0,0,.7);animation:fadeUp .35s ease both}
-.modal-box h3{margin-bottom:8px;color:var(--soft);font-family:var(--font-title);font-size:20px}
-.modal-box p{font-size:12.5px;color:var(--muted);margin-bottom:18px}
-.modal-box input{width:100%;padding:13px;margin-bottom:16px;border-radius:12px;border:1px solid var(--border);background:var(--bg2);color:var(--text);text-align:center;font-size:17px;outline:none;letter-spacing:3px;transition:.3s}
-.modal-box input:focus{border-color:var(--soft);box-shadow:0 0 0 3px var(--glow)}
-.modal-actions{display:flex;gap:8px}
-.modal-actions button{flex:1;padding:11px;border-radius:10px;font-weight:600;cursor:pointer;font-size:13px;transition:.25s;border:none}
-.btn-cancel{background:var(--bg2);color:var(--muted);border:1px solid var(--border)!important}
-.btn-cancel:hover{color:var(--text)}
-.btn-submit{background:var(--grad);color:var(--bg)}
-.btn-submit:hover{filter:brightness(1.1)}
-
-/* TOAST */
-#toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(30px);background:var(--card);color:var(--text);border:1px solid var(--border);padding:13px 24px;border-radius:999px;font-size:13px;font-weight:500;box-shadow:0 20px 50px -12px rgba(0,0,0,.6);opacity:0;pointer-events:none;transition:.4s;z-index:10000;display:flex;align-items:center;gap:8px;max-width:90vw}
-#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-#toast.error{border-color:rgba(248,113,113,.4);color:#fca5a5}
-
-/* BACK TO TOP */
-#backTop{position:fixed;bottom:24px;right:24px;width:46px;height:46px;border-radius:50%;background:var(--grad);color:var(--bg);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;opacity:0;visibility:hidden;transform:translateY(10px);transition:.35s;z-index:90;box-shadow:0 10px 30px -8px var(--glow)}
+/* FLOATING */
+#floatWa{position:fixed;bottom:78px;right:22px;width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#25d366,#128c7e);color:#fff;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 30px -8px rgba(37,211,102,.6);z-index:90;transition:.35s;position:fixed}
+#floatWa:hover{transform:scale(1.08)}
+#floatWa svg{width:26px;height:26px}
+#backTop{position:fixed;bottom:22px;right:22px;width:46px;height:46px;border-radius:50%;background:var(--grad);color:var(--bg);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;opacity:0;visibility:hidden;transform:translateY(10px);transition:.35s;z-index:90;box-shadow:0 10px 30px -8px var(--glow)}
 #backTop.show{opacity:1;visibility:visible;transform:translateY(0)}
 #backTop:hover{transform:translateY(-3px);filter:brightness(1.1)}
+
+/* TOAST */
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(30px);background:var(--card);color:var(--text);border:1px solid var(--border);padding:13px 24px;border-radius:999px;font-size:13px;font-weight:500;box-shadow:0 20px 50px -12px rgba(0,0,0,.6);opacity:0;pointer-events:none;transition:.4s;z-index:10000;max-width:90vw}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+#toast.error{border-color:rgba(248,113,113,.4);color:#fca5a5}
 
 @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
@@ -246,11 +283,16 @@ footer p{color:var(--muted);font-size:11px;letter-spacing:1.2px;text-transform:u
   .post-head{padding:16px 18px 12px}
   .post .caption,.post-location,.post-actions{padding-left:18px;padding-right:18px}
   .comments{padding:14px 18px 18px}
-  #backTop{bottom:20px;right:20px;width:42px;height:42px}
+  .pm-body,.form-body{padding:18px}
+  #backTop,#floatWa{bottom:16px;right:16px}
+  #backTop{width:42px;height:42px}
+  #floatWa{bottom:68px;width:48px;height:48px}
 }
 </style>
 </head>
 <body data-theme="noir">
+
+<a href="#main" class="skip-link">Skip ke konten</a>
 
 <header>
   <div class="brand">Serabimu<span>Kuliner</span></div>
@@ -278,8 +320,9 @@ footer p{color:var(--muted);font-size:11px;letter-spacing:1.2px;text-transform:u
   </nav>
 </header>
 
+<main id="main">
 <div class="hero">
-  <div class="badge-open" id="openBadge"><span class="dot"></span><span id="openText">Memuat status...</span></div>
+  <div class="badge-open" id="openBadge"><span class="dot"></span><span id="openText">Memuat...</span></div>
   <div class="eyebrow">Est. 2026 — Lezat & Tradisional</div>
   <h1>Serabimu</h1>
   <p>Kelezatan autentik dalam setiap gigitan. Resep warisan penuh cinta, manisnya pas di hati.</p>
@@ -314,9 +357,14 @@ footer p{color:var(--muted);font-size:11px;letter-spacing:1.2px;text-transform:u
     <p>Cita rasa istimewa buatan tangan hari ini</p>
   </div>
   <div class="feed" id="publicFeedList">
-    <div class="empty-state">Memuat postingan...</div>
+    <div class="post" style="padding:20px 22px">
+      <div style="display:flex;gap:12px;align-items:center;margin-bottom:16px"><div class="skeleton" style="width:44px;height:44px;border-radius:50%"></div><div style="flex:1"><div class="skeleton" style="height:12px;width:40%;margin-bottom:8px;border-radius:6px"></div><div class="skeleton" style="height:10px;width:25%;border-radius:6px"></div></div></div>
+      <div class="skeleton" style="height:12px;width:80%;margin-bottom:8px;border-radius:6px"></div>
+      <div class="skeleton" style="height:180px;border-radius:12px"></div>
+    </div>
   </div>
 </div>
+</main>
 
 <div id="lightbox">
   <button id="lightboxClose" aria-label="Tutup">✕</button>
@@ -329,15 +377,49 @@ footer p{color:var(--muted);font-size:11px;letter-spacing:1.2px;text-transform:u
 <div class="cart-drawer" id="cartDrawer">
   <div class="cart-head">
     <h3>Keranjang</h3>
-    <button class="cart-close" id="cartClose" aria-label="Tutup keranjang">✕</button>
+    <button class="cart-close" id="cartClose" aria-label="Tutup">✕</button>
   </div>
   <div class="cart-body" id="cartBody"></div>
   <div class="cart-foot">
     <div class="cart-total"><span>Total</span><span id="cartTotal">Rp 0</span></div>
-    <button class="btn-checkout" id="checkoutBtn">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
-      Checkout via WhatsApp
-    </button>
+    <button class="btn-checkout" id="checkoutBtn">Checkout via WhatsApp</button>
+  </div>
+</div>
+
+<div id="productModal" class="modal-overlay">
+  <div class="modal-panel">
+    <button class="modal-x" id="productModalClose" aria-label="Tutup">✕</button>
+    <div id="productModalBody"></div>
+  </div>
+</div>
+
+<div id="checkoutModal" class="modal-overlay">
+  <div class="modal-panel">
+    <button class="modal-x" id="checkoutClose" aria-label="Tutup">✕</button>
+    <div class="form-body">
+      <h3>Detail Pesanan</h3>
+      <p class="sub">Lengkapi data untuk checkout via WhatsApp</p>
+      <form id="checkoutForm">
+        <label for="coName">Nama *</label>
+        <input type="text" id="coName" name="name" required>
+        <label for="coPhone">No. HP *</label>
+        <input type="tel" id="coPhone" name="phone" required inputmode="tel">
+        <label for="coType">Tipe Pesanan *</label>
+        <select id="coType" name="type">
+          <option>Dine-in</option>
+          <option>Take-away</option>
+          <option>Delivery</option>
+        </select>
+        <div id="addressField" style="display:none">
+          <label for="coAddress">Alamat *</label>
+          <textarea id="coAddress" name="address" rows="2" placeholder="Alamat lengkap pengiriman..."></textarea>
+        </div>
+        <label for="coNotes">Catatan</label>
+        <textarea id="coNotes" name="notes" rows="2" placeholder="Contoh: tanpa gula, pedas level 3..."></textarea>
+        <div class="summary" id="checkoutSummary"></div>
+        <button type="submit" class="btn-submit-form">Kirim ke WhatsApp</button>
+      </form>
+    </div>
   </div>
 </div>
 
@@ -348,16 +430,19 @@ footer p{color:var(--muted);font-size:11px;letter-spacing:1.2px;text-transform:u
   <button id="adminLoginTrigger">🔒 Admin Panel</button>
 </footer>
 
+<button id="floatWa" aria-label="Hubungi via WhatsApp">
+  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+</button>
 <button id="backTop" aria-label="Kembali ke atas">↑</button>
 
-<div id="adminModal">
-  <div class="modal-box">
-    <h3>Masuk Mode Admin</h3>
-    <p>Masukkan PIN Admin</p>
-    <input type="password" id="adminPinInput" placeholder="••••" inputmode="numeric">
-    <div class="modal-actions">
-      <button class="btn-cancel" id="cancelPinBtn">Batal</button>
-      <button class="btn-submit" id="submitPinBtn">Masuk</button>
+<div id="adminModal" class="modal-overlay">
+  <div class="modal-panel">
+    <button class="modal-x" id="cancelPinBtn" aria-label="Tutup">✕</button>
+    <div class="form-body" style="text-align:center">
+      <h3 style="color:var(--soft)">Masuk Mode Admin</h3>
+      <p class="sub">Masukkan PIN Admin</p>
+      <input type="password" id="adminPinInput" placeholder="••••" inputmode="numeric" style="text-align:center;letter-spacing:6px;font-size:20px">
+      <button class="btn-submit-form" id="submitPinBtn">Masuk</button>
     </div>
   </div>
 </div>
@@ -379,7 +464,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-/* ============ UTIL ============ */
 const $ = s => document.querySelector(s);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt = n => 'Rp ' + (Number(n)||0).toLocaleString('id-ID');
@@ -401,7 +485,7 @@ const timeAgo = ts => {
   return Math.floor(diff/86400) + ' hari lalu';
 };
 
-/* ============ TEMA ============ */
+/* TEMA */
 const savedTheme = localStorage.getItem('serabimu_theme') || 'noir';
 document.body.setAttribute('data-theme', savedTheme);
 const dropdown = $('#themeDropdown');
@@ -414,174 +498,261 @@ document.querySelectorAll('.theme-menu button').forEach(btn => {
   }
   btn.addEventListener('click', e => {
     e.stopPropagation();
-    const t = btn.dataset.t;
-    document.body.setAttribute('data-theme', t);
-    localStorage.setItem('serabimu_theme', t);
+    document.body.setAttribute('data-theme', btn.dataset.t);
+    localStorage.setItem('serabimu_theme', btn.dataset.t);
     document.querySelectorAll('.theme-menu button').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     dropdown.classList.remove('open');
   });
 });
 
-/* ============ JAM OPERASIONAL / BUKA-TUTUP ============ */
-let storeHours = { open: '08:00', close: '21:00', whatsapp: '' };
-let storeWaNumber = ''; // fallback
-const settingsRef = doc(db, 'settings', 'store_hours');
-getDoc(settingsRef).then(snap => {
+/* JAM TOKO + COUNTDOWN */
+let storeHours = { open:'08:00', close:'21:00', whatsapp:'' };
+let storeWa = '';
+getDoc(doc(db, 'settings', 'store_hours')).then(snap => {
   if(snap.exists()) {
     const d = snap.data();
     storeHours.open = d.open || '08:00';
     storeHours.close = d.close || '21:00';
     storeHours.whatsapp = d.whatsapp || '';
-    storeWaNumber = storeHours.whatsapp;
+    storeWa = storeHours.whatsapp;
   }
   updateOpenStatus();
-  renderCart();
-}).catch(() => { updateOpenStatus(); renderCart(); });
+}).catch(() => updateOpenStatus());
 
 function isOpenNow() {
   const now = new Date();
   const cur = now.getHours()*60 + now.getMinutes();
-  const [oh, om] = storeHours.open.split(':').map(Number);
-  const [ch, cm] = storeHours.close.split(':').map(Number);
-  const o = oh*60 + (om||0), c = ch*60 + (cm||0);
+  const [oh,om] = storeHours.open.split(':').map(Number);
+  const [ch,cm] = storeHours.close.split(':').map(Number);
+  const o = oh*60+(om||0), c = ch*60+(cm||0);
   return c > o ? (cur >= o && cur < c) : (cur >= o || cur < c);
 }
 function updateOpenStatus() {
   const badge = $('#openBadge'), text = $('#openText');
   const open = isOpenNow();
   badge.classList.toggle('closed', !open);
-  text.textContent = open ? 'Buka Sekarang' : 'Tutup';
+  if(open) {
+    const now = new Date();
+    const cur = now.getHours()*60 + now.getMinutes();
+    const [ch,cm] = storeHours.close.split(':').map(Number);
+    let c = ch*60+(cm||0);
+    let diff = c - cur;
+    if(diff < 0) diff += 24*60;
+    const h = Math.floor(diff/60), m = diff%60;
+    text.textContent = `Buka — tutup dalam ${h}j ${m}m`;
+  } else {
+    text.textContent = `Tutup — buka ${storeHours.open}`;
+  }
   $('#footerHours').textContent = `🕒 ${storeHours.open} – ${storeHours.close}`;
 }
-setInterval(updateOpenStatus, 60000);
+setInterval(updateOpenStatus, 30000);
 
-/* ============ KATALOG + SEARCH + FILTER ============ */
+/* WISHLIST & RATED */
+let wishlist = new Set(JSON.parse(localStorage.getItem('serabimu_wishlist') || '[]'));
+let rated = new Set(JSON.parse(localStorage.getItem('serabimu_rated') || '[]'));
+const saveWishlist = () => localStorage.setItem('serabimu_wishlist', JSON.stringify([...wishlist]));
+const saveRated = () => localStorage.setItem('serabimu_rated', JSON.stringify([...rated]));
+
+/* KATALOG */
 const catalogSlider = $('#catalogSlider');
 const searchInput = $('#searchInput');
 const categoryChips = $('#categoryChips');
-let allProducts = [];
-let activeCategory = 'all';
-let searchTerm = '';
+let allProducts = [], activeCategory = 'all', searchTerm = '';
 
 const qProducts = query(collection(db, 'products'), orderBy('createdAt', 'desc'));
 onSnapshot(qProducts, snap => {
   allProducts = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-  renderCategoryChips();
-  renderCatalog();
-}, err => {
-  catalogSlider.innerHTML = '<div class="empty-state">Gagal memuat katalog</div>';
-  console.error(err);
-});
+  renderChips(); renderCatalog();
+}, err => { catalogSlider.innerHTML = '<div class="empty-state">Gagal memuat katalog</div>'; console.error(err); });
 
-function renderCategoryChips() {
+const isNew = p => {
+  if(!p.createdAt) return false;
+  const d = p.createdAt.toDate ? p.createdAt.toDate() : new Date(p.createdAt);
+  return (Date.now() - d.getTime()) < 7*86400*1000;
+};
+const isBest = p => (p.ratingCount || 0) >= 3 && (p.totalRating / p.ratingCount) >= 4.5;
+const avgRating = p => (p.ratingCount > 0) ? (p.totalRating / p.ratingCount) : 0;
+
+function renderChips() {
   const cats = new Set();
   allProducts.forEach(p => { if(p.category) cats.add(p.category); });
-  if(cats.size === 0) { categoryChips.innerHTML = ''; return; }
-  categoryChips.innerHTML = `<button class="chip ${activeCategory==='all'?'active':''}" data-cat="all">Semua</button>`;
+  let html = `<button class="chip ${activeCategory==='all'?'active':''}" data-cat="all">Semua</button>`;
+  if(wishlist.size > 0) html += `<button class="chip ${activeCategory==='wishlist'?'active':''}" data-cat="wishlist">❤️ Favorit (${wishlist.size})</button>`;
   cats.forEach(c => {
-    categoryChips.innerHTML += `<button class="chip ${activeCategory===c?'active':''}" data-cat="${esc(c)}">${esc(c)}</button>`;
+    html += `<button class="chip ${activeCategory===c?'active':''}" data-cat="${esc(c)}">${esc(c)}</button>`;
   });
+  categoryChips.innerHTML = html;
   categoryChips.querySelectorAll('.chip').forEach(chip => {
-    chip.addEventListener('click', () => {
-      activeCategory = chip.dataset.cat;
-      renderCategoryChips();
-      renderCatalog();
-    });
+    chip.addEventListener('click', () => { activeCategory = chip.dataset.cat; renderChips(); renderCatalog(); });
   });
 }
 
 function renderCatalog() {
   let items = allProducts;
-  if(activeCategory !== 'all') items = items.filter(p => p.category === activeCategory);
+  if(activeCategory === 'wishlist') items = items.filter(p => wishlist.has(p.id));
+  else if(activeCategory !== 'all') items = items.filter(p => p.category === activeCategory);
   if(searchTerm) {
     const q = searchTerm.toLowerCase();
-    items = items.filter(p =>
-      (p.title||'').toLowerCase().includes(q) ||
-      (p.description||'').toLowerCase().includes(q)
-    );
+    items = items.filter(p => (p.title||'').toLowerCase().includes(q) || (p.description||'').toLowerCase().includes(q));
   }
-
   if(items.length === 0) {
     catalogSlider.innerHTML = `<div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><div>Tidak ada produk ditemukan</div></div>`;
     return;
   }
-
   catalogSlider.innerHTML = items.map(p => {
     const price = p.price ? (typeof p.price === 'number' ? fmt(p.price) : esc(p.price)) : '';
+    const avg = avgRating(p);
+    const stars = avg > 0 ? `<span class="star-ico">★</span>${avg.toFixed(1)} <span style="color:var(--muted)">(${p.ratingCount})</span>` : `<span style="color:var(--muted)">Belum ada rating</span>`;
+    const badges = [];
+    if(isBest(p)) badges.push('<span class="badge-tag badge-best">🔥 Best Seller</span>');
+    if(isNew(p)) badges.push('<span class="badge-tag badge-new">✨ Baru</span>');
+    const wished = wishlist.has(p.id);
     return `
-      <div class="product-card">
+      <div class="product-card" data-id="${esc(p.id)}">
         <div class="product-img-wrap">
+          ${badges.length ? `<div class="product-badges">${badges.join('')}</div>` : ''}
+          <button class="wishlist-btn ${wished?'active':''}" data-wid="${esc(p.id)}" aria-label="Favorit">${wished?'❤️':'🤍'}</button>
           <img src="${esc(p.imageUrl || 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=900&q=80')}" alt="${esc(p.title)}" class="product-img" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=900&q=80'">
-          ${price ? `<span class="product-price-badge">${price}</span>` : ''}
         </div>
         <div class="product-body">
           <div class="product-title">${esc(p.title)}</div>
+          <div class="product-rating">${stars}</div>
           <div class="product-desc">${esc(p.description)}</div>
           <div class="product-footer">
             <span class="product-price">${price || '—'}</span>
-            <button class="btn-cart" data-id="${esc(p.id)}">+ Pesan</button>
+            <button class="btn-cart" data-pid="${esc(p.id)}">+ Pesan</button>
           </div>
         </div>
       </div>`;
   }).join('');
 
+  catalogSlider.querySelectorAll('.product-card').forEach(card => {
+    card.addEventListener('click', e => {
+      if(e.target.closest('button')) return;
+      openProductModal(card.dataset.id);
+    });
+  });
+  catalogSlider.querySelectorAll('.wishlist-btn').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      const id = btn.dataset.wid;
+      if(wishlist.has(id)) { wishlist.delete(id); btn.classList.remove('active'); btn.textContent = '🤍'; }
+      else { wishlist.add(id); btn.classList.add('active'); btn.textContent = '❤️'; }
+      saveWishlist(); renderChips();
+      if(activeCategory === 'wishlist') renderCatalog();
+    });
+  });
   catalogSlider.querySelectorAll('.btn-cart').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const p = allProducts.find(x => x.id === btn.dataset.id);
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      const p = allProducts.find(x => x.id === btn.dataset.pid);
       if(p) addToCart(p, btn);
     });
   });
 }
 
-searchInput.addEventListener('input', e => {
-  searchTerm = e.target.value.trim();
-  renderCatalog();
-});
+searchInput.addEventListener('input', e => { searchTerm = e.target.value.trim(); renderCatalog(); });
 
-/* ============ CART ============ */
-let cart = JSON.parse(localStorage.getItem('serabimu_cart') || '[]');
-const cartDrawer = $('#cartDrawer'), cartOverlay = $('#cartOverlay'), cartBody = $('#cartBody'), cartCount = $('#cartCount'), cartTotal = $('#cartTotal');
+/* MODAL PRODUK */
+const productModal = $('#productModal');
+const productModalBody = $('#productModalBody');
 
-function saveCart() {
-  localStorage.setItem('serabimu_cart', JSON.stringify(cart));
-  updateCartBadge();
-}
+function openProductModal(id) {
+  const p = allProducts.find(x => x.id === id);
+  if(!p) return;
+  const avg = avgRating(p);
+  const price = p.price ? (typeof p.price === 'number' ? fmt(p.price) : esc(p.price)) : '—';
+  const canRate = !rated.has(p.id);
+  const ratingStars = canRate
+    ? `<div class="rate-stars" data-pid="${esc(p.id)}">${[1,2,3,4,5].map(v => `<button data-v="${v}">★</button>`).join('')}</div>
+       <div class="rate-info">Klik bintang untuk memberi rating</div>`
+    : `<div class="rate-info done">✓ Anda sudah menilai produk ini</div>`;
 
-function updateCartBadge() {
-  const totalQty = cart.reduce((s, i) => s + i.qty, 0);
-  if(totalQty > 0) {
-    cartCount.style.display = 'flex';
-    cartCount.textContent = totalQty > 99 ? '99+' : totalQty;
-  } else {
-    cartCount.style.display = 'none';
-  }
-}
+  productModalBody.innerHTML = `
+    <img src="${esc(p.imageUrl || 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=900&q=80')}" alt="${esc(p.title)}" class="pm-img" onerror="this.src='https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=900&q=80'">
+    <div class="pm-body">
+      <h2 class="pm-title">${esc(p.title)}</h2>
+      <div class="pm-rating">${avg > 0 ? `<span class="star-ico">★</span> ${avg.toFixed(1)} <span style="color:var(--muted)">(${p.ratingCount} rating)</span>` : '<span style="color:var(--muted)">Belum ada rating</span>'}</div>
+      <p class="pm-desc">${esc(p.description || '')}</p>
+      <div class="pm-price">${price}</div>
+      <div class="pm-actions">
+        <button class="btn-hero ghost" id="pmAddCart">+ Keranjang</button>
+        <button class="btn-hero primary" id="pmBuyNow">Beli Sekarang</button>
+      </div>
+      <div class="pm-rate-section">
+        <p>Beri Rating:</p>
+        ${ratingStars}
+      </div>
+    </div>
+  `;
 
-function addToCart(product, btnEl) {
-  const existing = cart.find(i => i.id === product.id);
-  if(existing) existing.qty++;
-  else cart.push({
-    id: product.id,
-    title: product.title,
-    price: typeof product.price === 'number' ? product.price : 0,
-    priceRaw: product.price,
-    imageUrl: product.imageUrl || '',
-    qty: 1
+  productModal.classList.add('open');
+
+  productModalBody.querySelector('#pmAddCart').addEventListener('click', () => {
+    addToCart(p);
+    closeProductModal();
   });
-  saveCart();
-  renderCart();
-  if(btnEl) {
-    btnEl.classList.add('added');
-    btnEl.textContent = '✓ Ditambahkan';
-    setTimeout(() => {
-      btnEl.classList.remove('added');
-      btnEl.textContent = '+ Pesan';
-    }, 1400);
+  productModalBody.querySelector('#pmBuyNow').addEventListener('click', () => {
+    closeProductModal();
+    const item = { title: p.title, price: typeof p.price === 'number' ? p.price : 0, qty: 1 };
+    openCheckout([item]);
+  });
+  productModalBody.querySelectorAll('.rate-stars button').forEach(btn => {
+    btn.addEventListener('mouseenter', () => {
+      const v = +btn.dataset.v;
+      productModalBody.querySelectorAll('.rate-stars button').forEach(b => {
+        b.classList.toggle('hover', +b.dataset.v <= v);
+      });
+    });
+    btn.addEventListener('mouseleave', () => {
+      productModalBody.querySelectorAll('.rate-stars button').forEach(b => b.classList.remove('hover'));
+    });
+    btn.addEventListener('click', () => submitRating(p.id, +btn.dataset.v));
+  });
+}
+function closeProductModal() { productModal.classList.remove('open'); }
+$('#productModalClose').addEventListener('click', closeProductModal);
+productModal.addEventListener('click', e => { if(e.target === productModal) closeProductModal(); });
+
+async function submitRating(productId, value) {
+  if(rated.has(productId)) { toast('Anda sudah menilai produk ini'); return; }
+  try {
+    await addDoc(collection(db, 'ratings'), { productId, value, createdAt: serverTimestamp() });
+    await updateDoc(doc(db, 'products', productId), {
+      totalRating: increment(value),
+      ratingCount: increment(1)
+    });
+    rated.add(productId); saveRated();
+    const p = allProducts.find(x => x.id === productId);
+    if(p) { p.totalRating = (p.totalRating||0) + value; p.ratingCount = (p.ratingCount||0) + 1; }
+    renderCatalog();
+    openProductModal(productId);
+    toast('Terima kasih atas rating Anda ⭐');
+  } catch(e) { toast('Gagal: ' + e.message, true); }
+}
+
+/* CART */
+let cart = JSON.parse(localStorage.getItem('serabimu_cart') || '[]');
+const cartDrawer = $('#cartDrawer'), cartOverlay = $('#cartOverlay'), cartBody = $('#cartBody'), cartCountEl = $('#cartCount'), cartTotal = $('#cartTotal');
+
+function saveCart() { localStorage.setItem('serabimu_cart', JSON.stringify(cart)); updateCartBadge(); }
+function updateCartBadge() {
+  const qty = cart.reduce((s,i) => s + i.qty, 0);
+  if(qty > 0) { cartCountEl.style.display = 'flex'; cartCountEl.textContent = qty > 99 ? '99+' : qty; }
+  else cartCountEl.style.display = 'none';
+}
+function addToCart(p, btn) {
+  const ex = cart.find(i => i.id === p.id);
+  if(ex) ex.qty++;
+  else cart.push({ id: p.id, title: p.title, price: typeof p.price === 'number' ? p.price : 0, priceRaw: p.price, imageUrl: p.imageUrl || '', qty: 1 });
+  saveCart(); renderCart();
+  if(btn) {
+    btn.classList.add('added'); btn.textContent = '✓ Ditambahkan';
+    setTimeout(() => { btn.classList.remove('added'); btn.textContent = '+ Pesan'; }, 1400);
   }
   toast('Ditambahkan ke keranjang');
 }
-
 function renderCart() {
   updateCartBadge();
   if(cart.length === 0) {
@@ -590,62 +761,114 @@ function renderCart() {
     $('#checkoutBtn').disabled = true;
     return;
   }
-  cartBody.innerHTML = cart.map((it, i) => `
+  cartBody.innerHTML = cart.map((it,i) => `
     <div class="cart-item">
       <img src="${esc(it.imageUrl || 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=100')}" alt="${esc(it.title)}" onerror="this.style.background='var(--bg2)';this.src=''">
       <div class="cart-item-info">
         <div class="cart-item-title">${esc(it.title)}</div>
         <div class="cart-item-price">${it.price ? fmt(it.price) : esc(it.priceRaw || '—')}</div>
         <div class="cart-item-controls">
-          <button class="qty-btn" data-i="${i}" data-a="dec">−</button>
+          <button class="qty-btn" data-i="${i}" data-a="dec" aria-label="Kurangi">−</button>
           <span class="qty-val">${it.qty}</span>
-          <button class="qty-btn" data-i="${i}" data-a="inc">+</button>
+          <button class="qty-btn" data-i="${i}" data-a="inc" aria-label="Tambah">+</button>
           <button class="cart-item-remove" data-i="${i}" data-a="del">Hapus</button>
         </div>
       </div>
     </div>
   `).join('');
-
   cartBody.querySelectorAll('.qty-btn, .cart-item-remove').forEach(btn => {
     btn.addEventListener('click', () => {
       const i = +btn.dataset.i, a = btn.dataset.a;
       if(a === 'inc') cart[i].qty++;
-      else if(a === 'dec') { cart[i].qty--; if(cart[i].qty <= 0) cart.splice(i, 1); }
-      else if(a === 'del') cart.splice(i, 1);
-      saveCart();
-      renderCart();
+      else if(a === 'dec') { cart[i].qty--; if(cart[i].qty <= 0) cart.splice(i,1); }
+      else cart.splice(i,1);
+      saveCart(); renderCart();
     });
   });
-
-  const total = cart.reduce((s, i) => s + (i.price * i.qty), 0);
+  const total = cart.reduce((s,i) => s + (i.price * i.qty), 0);
   cartTotal.textContent = fmt(total);
   $('#checkoutBtn').disabled = false;
 }
-
 function openCart() { cartDrawer.classList.add('open'); cartOverlay.classList.add('open'); }
 function closeCart() { cartDrawer.classList.remove('open'); cartOverlay.classList.remove('open'); }
-
 $('#cartBtn').addEventListener('click', openCart);
 $('#cartClose').addEventListener('click', closeCart);
 cartOverlay.addEventListener('click', closeCart);
 
+window.addEventListener('storage', e => {
+  if(e.key === 'serabimu_cart') {
+    cart = JSON.parse(e.newValue || '[]');
+    renderCart();
+  }
+});
+
+/* CHECKOUT */
+const checkoutModal = $('#checkoutModal');
+let checkoutItems = [];
+
+function openCheckout(items) {
+  checkoutItems = items;
+  const summary = $('#checkoutSummary');
+  summary.innerHTML = items.map(it =>
+    `<div class="row"><span>${esc(it.title)} × ${it.qty}</span><span>${fmt(it.price * it.qty)}</span></div>`
+  ).join('') + `<div class="row total"><span>Total</span><span>${fmt(items.reduce((s,i)=>s+i.price*i.qty,0))}</span></div>`;
+  $('#coName').value = localStorage.getItem('serabimu_name') || '';
+  $('#coPhone').value = localStorage.getItem('serabimu_phone') || '';
+  checkoutModal.classList.add('open');
+}
+function closeCheckout() { checkoutModal.classList.remove('open'); }
 $('#checkoutBtn').addEventListener('click', () => {
   if(cart.length === 0) return;
-  const wa = storeWaNumber || '6280000000000';
+  closeCart();
+  openCheckout(cart.map(c => ({ title: c.title, price: c.price, qty: c.qty })));
+});
+$('#checkoutClose').addEventListener('click', closeCheckout);
+checkoutModal.addEventListener('click', e => { if(e.target === checkoutModal) closeCheckout(); });
+
+$('#coType').addEventListener('change', e => {
+  $('#addressField').style.display = e.target.value === 'Delivery' ? 'block' : 'none';
+});
+
+$('#checkoutForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const fd = new FormData(e.target);
+  const name = (fd.get('name')||'').trim();
+  const phone = (fd.get('phone')||'').trim();
+  const type = fd.get('type');
+  const address = (fd.get('address')||'').trim();
+  const notes = (fd.get('notes')||'').trim();
+  if(!name || !phone) { toast('Nama & HP wajib diisi', true); return; }
+  if(type === 'Delivery' && !address) { toast('Alamat wajib untuk delivery', true); return; }
+
+  localStorage.setItem('serabimu_name', name);
+  localStorage.setItem('serabimu_phone', phone);
+
   let msg = '*Pesanan Baru — Serabimu*\n\n';
-  cart.forEach((it, i) => {
-    msg += `${i+1}. ${it.title} × ${it.qty} = ${fmt(it.price * it.qty)}\n`;
-  });
-  const total = cart.reduce((s, i) => s + (i.price * i.qty), 0);
-  msg += `\n*Total: ${fmt(total)}*\n\nMohon konfirmasi ketersediaan. Terima kasih 🙏`;
+  msg += `👤 Nama: ${name}\n📱 HP: ${phone}\n📦 Tipe: ${type}\n`;
+  if(type === 'Delivery') msg += `📍 Alamat: ${address}\n`;
+  if(notes) msg += `📝 Catatan: ${notes}\n`;
+  msg += '\n*Detail Pesanan:*\n';
+  checkoutItems.forEach((it,i) => { msg += `${i+1}. ${it.title} × ${it.qty} = ${fmt(it.price * it.qty)}\n`; });
+  msg += `\n*Total: ${fmt(checkoutItems.reduce((s,i)=>s+i.price*i.qty,0))}*\n\nMohon konfirmasi. Terima kasih 🙏`;
+
+  const wa = storeWa || '6280000000000';
+  window.open(`https://wa.me/${wa}?text=${encodeURIComponent(msg)}`, '_blank');
+  closeCheckout();
+  toast('Membuka WhatsApp...');
+});
+
+/* FLOATING WA */
+$('#floatWa').addEventListener('click', () => {
+  const wa = storeWa || '6280000000000';
+  const msg = 'Halo Serabimu, saya ingin bertanya...';
   window.open(`https://wa.me/${wa}?text=${encodeURIComponent(msg)}`, '_blank');
 });
 
-/* ============ FEED ============ */
+/* FEED */
 const publicFeedList = $('#publicFeedList');
 const likedPosts = new Set(JSON.parse(localStorage.getItem('serabimu_liked') || '[]'));
 const commentUnsubs = new Map();
-const replyState = new Map(); // postId -> {commentId, name}
+const replyState = new Map();
 
 const qPosts = query(collection(db, 'posts'), orderBy('createdAt', 'desc'));
 onSnapshot(qPosts, snap => {
@@ -655,162 +878,107 @@ onSnapshot(qPosts, snap => {
     return;
   }
   snap.forEach(docSnap => {
-    const d = docSnap.data();
-    const postId = docSnap.id;
+    const d = docSnap.data(); const postId = docSnap.id;
     const liked = likedPosts.has(postId);
-
     let mediaHtml = '';
     if(d.mediaUrls && d.mediaUrls.length > 0) {
-      mediaHtml = `<div class="post-media-grid" data-post="${esc(postId)}">` +
-        d.mediaUrls.map((m, idx) => {
-          if(m.type === 'video')
-            return `<video src="${esc(m.url)}" controls preload="metadata" data-idx="${idx}"></video>`;
-          return `<img src="${esc(m.url)}" alt="Media" loading="lazy" data-idx="${idx}">`;
-        }).join('') + `</div>`;
+      mediaHtml = `<div class="post-media-grid">` + d.mediaUrls.map(m => {
+        if(m.type === 'video') return `<video src="${esc(m.url)}" controls preload="metadata"></video>`;
+        return `<img src="${esc(m.url)}" alt="Media" loading="lazy">`;
+      }).join('') + `</div>`;
     }
-
     const locHtml = d.location
-      ? `<a class="post-location" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(d.location)}" target="_blank" rel="noopener">📍 ${esc(d.location)}</a>`
-      : '';
-
+      ? `<a class="post-location" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(d.location)}" target="_blank" rel="noopener">📍 ${esc(d.location)}</a>` : '';
     const el = document.createElement('div');
     el.className = 'post';
     el.innerHTML = `
       <div class="post-head">
         <div class="avatar">S</div>
-        <div>
-          <div class="name">Serabimu <span class="verified">✓</span></div>
-          <div class="time">${timeAgo(d.createdAt)}</div>
-        </div>
-        <div class="post-menu">
-          <button class="btn-share-post" data-id="${esc(postId)}" title="Bagikan">⋯</button>
-        </div>
+        <div><div class="name">Serabimu <span class="verified">✓</span></div><div class="time">${timeAgo(d.createdAt)}</div></div>
+        <div class="post-menu"><button class="btn-share-post" data-id="${esc(postId)}" title="Bagikan" aria-label="Bagikan">⋯</button></div>
       </div>
       ${d.caption ? `<p class="caption">${esc(d.caption)}</p>` : ''}
-      ${locHtml}
-      ${mediaHtml}
+      ${locHtml}${mediaHtml}
       <div class="post-actions">
         <div class="action-group">
-          <button class="btn-like ${liked?'liked':''}" data-id="${esc(postId)}">
-            ${liked?'❤️':'🤍'} <span class="like-count">${d.likes||0}</span> Suka
-          </button>
+          <button class="btn-like ${liked?'liked':''}" data-id="${esc(postId)}">${liked?'❤️':'🤍'} <span class="like-count">${d.likes||0}</span> Suka</button>
         </div>
         <span style="font-size:11.5px;color:var(--muted)">💬 <span id="ccount-${esc(postId)}">0</span> ulasan</span>
       </div>
       <div class="comments">
         <div class="c-head">Ulasan & Diskusi</div>
-        <div class="comment-list" id="comments-${esc(postId)}">
-          <div style="font-size:11px;color:var(--muted)">Memuat...</div>
-        </div>
-        <div class="reply-chip" id="replychip-${esc(postId)}">
-          <span>Membalas <strong id="replyname-${esc(postId)}"></strong></span>
-          <button data-id="${esc(postId)}">✕</button>
-        </div>
+        <div class="comment-list" id="comments-${esc(postId)}"><div style="font-size:11px;color:var(--muted)">Memuat...</div></div>
+        <div class="reply-chip" id="replychip-${esc(postId)}"><span>Membalas <strong id="replyname-${esc(postId)}"></strong></span><button data-id="${esc(postId)}">✕</button></div>
         <form class="comment-form" data-id="${esc(postId)}">
           <input type="text" placeholder="Tulis komentar..." id="input-comment-${esc(postId)}" maxlength="500">
           <button type="submit">Kirim</button>
         </form>
-      </div>
-    `;
+      </div>`;
     publicFeedList.appendChild(el);
 
-    // Like
     const likeBtn = el.querySelector('.btn-like');
     likeBtn.addEventListener('click', async () => {
       if(likedPosts.has(postId)) { toast('Kamu sudah menyukai ini'); return; }
-      likeBtn.classList.add('pop');
+      likeBtn.classList.add('pop','liked');
       setTimeout(() => likeBtn.classList.remove('pop'), 400);
-      likeBtn.classList.add('liked');
       likeBtn.innerHTML = `❤️ <span class="like-count">${(d.likes||0)+1}</span> Suka`;
       likedPosts.add(postId);
       localStorage.setItem('serabimu_liked', JSON.stringify([...likedPosts]));
-      try { await updateDoc(doc(db, 'posts', postId), { likes: increment(1) }); }
-      catch(e) { console.warn(e); }
+      try { await updateDoc(doc(db, 'posts', postId), { likes: increment(1) }); } catch(e){ console.warn(e); }
     });
 
-    // Share
     el.querySelector('.btn-share-post').addEventListener('click', async () => {
       const url = location.origin + location.pathname + '#' + postId;
-      const shareData = { title: 'Serabimu', text: d.caption || 'Cek postingan Serabimu', url };
-      if(navigator.share) {
-        try { await navigator.share(shareData); } catch {}
-      } else {
-        try { await navigator.clipboard.writeText(url); toast('Link disalin'); }
-        catch { toast('Gagal menyalin', true); }
-      }
+      const shareData = { title:'Serabimu', text: d.caption || 'Cek postingan Serabimu', url };
+      if(navigator.share) { try { await navigator.share(shareData); } catch {} }
+      else { try { await navigator.clipboard.writeText(url); toast('Link disalin'); } catch { toast('Gagal menyalin', true); } }
     });
 
-    // Reply chip close
     el.querySelector('.reply-chip button').addEventListener('click', () => {
       replyState.delete(postId);
       el.querySelector('.reply-chip').classList.remove('show');
-      const inp = el.querySelector('input');
-      inp.placeholder = 'Tulis komentar...';
+      el.querySelector('input').placeholder = 'Tulis komentar...';
     });
 
-    // Submit comment
     el.querySelector('.comment-form').addEventListener('submit', async e => {
       e.preventDefault();
       const input = el.querySelector('input');
       const text = input.value.trim();
       if(!text) return;
       let userName = localStorage.getItem('serabimu_user_name');
-      if(!userName) {
-        userName = prompt('Masukkan nama Anda untuk berkomentar:') || 'Pelanggan Setia';
-        localStorage.setItem('serabimu_user_name', userName);
-      }
+      if(!userName) { userName = prompt('Nama Anda untuk berkomentar:') || 'Pelanggan Setia'; localStorage.setItem('serabimu_user_name', userName); }
       const parent = replyState.get(postId);
       try {
         await addDoc(collection(db, 'comments'), {
-          postId,
-          parentId: parent ? parent.commentId : '',
-          name: userName,
-          text,
-          createdAt: serverTimestamp()
+          postId, parentId: parent ? parent.commentId : '', name: userName, text, createdAt: serverTimestamp()
         });
         input.value = '';
         replyState.delete(postId);
         el.querySelector('.reply-chip').classList.remove('show');
         input.placeholder = 'Tulis komentar...';
-      } catch(err) {
-        toast('Gagal kirim komentar: ' + err.message, true);
-      }
+      } catch(err) { toast('Gagal kirim: ' + err.message, true); }
     });
 
     loadCommentsForPost(postId);
   });
-}, err => {
-  publicFeedList.innerHTML = `<div class="empty-state">Gagal memuat feed</div>`;
-  console.error(err);
-});
+}, err => { publicFeedList.innerHTML = `<div class="empty-state">Gagal memuat feed</div>`; console.error(err); });
 
 function loadCommentsForPost(postId) {
   if(commentUnsubs.has(postId)) return;
   const container = document.getElementById(`comments-${postId}`);
   if(!container) return;
-  const qC = query(collection(db, 'comments'), where('postId', '==', postId), orderBy('createdAt', 'asc'));
+  const qC = query(collection(db, 'comments'), where('postId','==',postId), orderBy('createdAt','asc'));
   const unsub = onSnapshot(qC, snap => {
     const countEl = document.getElementById(`ccount-${postId}`);
     if(countEl) countEl.textContent = snap.size;
-    if(snap.empty) {
-      container.innerHTML = `<div style="font-size:12px;color:var(--muted);margin-bottom:10px">Belum ada komentar.</div>`;
-      return;
-    }
+    if(snap.empty) { container.innerHTML = `<div style="font-size:12px;color:var(--muted);margin-bottom:10px">Belum ada komentar.</div>`; return; }
     const map = {}; const roots = [];
-    snap.forEach(ds => {
-      const c = { id: ds.id, ...ds.data() };
-      map[c.id] = c;
-      if(!c.parentId) roots.push(c);
-    });
+    snap.forEach(ds => { const c = { id: ds.id, ...ds.data() }; map[c.id] = c; if(!c.parentId) roots.push(c); });
     container.innerHTML = '';
     roots.forEach(rc => container.appendChild(renderCommentTree(rc, map, postId)));
-  }, err => {
-    container.innerHTML = `<div style="font-size:12px;color:var(--muted)">Gagal memuat komentar</div>`;
-    console.error(err);
-  });
+  }, err => { container.innerHTML = `<div style="font-size:12px;color:var(--muted)">Gagal memuat</div>`; console.error(err); });
   commentUnsubs.set(postId, unsub);
 }
-
 function renderCommentTree(comment, map, postId) {
   const div = document.createElement('div');
   div.className = 'comment';
@@ -820,14 +988,10 @@ function renderCommentTree(comment, map, postId) {
       <div class="bubble">
         <div class="cname">${esc(comment.name || 'Anonim')}</div>
         <div class="ctext">${esc(comment.text)}</div>
-        <div class="c-meta">
-          <button class="btn-reply-trigger" data-id="${esc(comment.id)}" data-name="${esc(comment.name)}">Balas</button>
-          <span style="color:var(--muted)">${timeAgo(comment.createdAt)}</span>
-        </div>
+        <div class="c-meta"><button class="btn-reply-trigger" data-id="${esc(comment.id)}" data-name="${esc(comment.name)}">Balas</button><span style="color:var(--muted)">${timeAgo(comment.createdAt)}</span></div>
       </div>
     </div>
-    <div class="comment-replies"></div>
-  `;
+    <div class="comment-replies"></div>`;
   div.querySelector('.btn-reply-trigger').addEventListener('click', () => {
     replyState.set(postId, { commentId: comment.id, name: comment.name });
     const chip = document.getElementById(`replychip-${postId}`);
@@ -838,34 +1002,25 @@ function renderCommentTree(comment, map, postId) {
     if(inp) { inp.placeholder = `Membalas ${comment.name}...`; inp.focus(); }
   });
   const repContainer = div.querySelector('.comment-replies');
-  Object.values(map).filter(c => c.parentId === comment.id).forEach(r => {
-    repContainer.appendChild(renderCommentTree(r, map, postId));
-  });
+  Object.values(map).filter(c => c.parentId === comment.id).forEach(r => repContainer.appendChild(renderCommentTree(r, map, postId)));
   return div;
 }
 
-/* ============ LIGHTBOX ============ */
-const lightbox = $('#lightbox');
-const lightboxContent = $('#lightboxContent');
+/* LIGHTBOX */
+const lightbox = $('#lightbox'), lightboxContent = $('#lightboxContent');
 let lbItems = [], lbIdx = 0;
 document.addEventListener('click', e => {
   const t = e.target;
   if(t.matches('.post-media-grid img, .post-media-grid video')) {
     const grid = t.closest('.post-media-grid');
-    lbItems = [...grid.querySelectorAll('img, video')].map(el => ({
-      type: el.tagName === 'VIDEO' ? 'video' : 'image',
-      src: el.src
-    }));
+    lbItems = [...grid.querySelectorAll('img, video')].map(el => ({ type: el.tagName === 'VIDEO' ? 'video' : 'image', src: el.src }));
     lbIdx = [...grid.children].indexOf(t);
     showLightbox();
   }
 });
 function showLightbox() {
-  const item = lbItems[lbIdx];
-  if(!item) return;
-  lightboxContent.innerHTML = item.type === 'video'
-    ? `<video src="${esc(item.src)}" controls autoplay></video>`
-    : `<img src="${esc(item.src)}" alt="">`;
+  const item = lbItems[lbIdx]; if(!item) return;
+  lightboxContent.innerHTML = item.type === 'video' ? `<video src="${esc(item.src)}" controls autoplay></video>` : `<img src="${esc(item.src)}" alt="">`;
   $('#lightboxPrev').style.display = lbItems.length > 1 ? 'flex' : 'none';
   $('#lightboxNext').style.display = lbItems.length > 1 ? 'flex' : 'none';
   lightbox.classList.add('open');
@@ -882,35 +1037,25 @@ document.addEventListener('keydown', e => {
   if(e.key === 'ArrowRight') $('#lightboxNext').click();
 });
 
-/* ============ BACK TO TOP ============ */
+/* BACK TOP */
 const backTop = $('#backTop');
-window.addEventListener('scroll', () => {
-  backTop.classList.toggle('show', window.scrollY > 400);
-});
+window.addEventListener('scroll', () => backTop.classList.toggle('show', window.scrollY > 400));
 backTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
-/* ============ ADMIN PIN (SHA-256) ============ */
-const ADMIN_PIN_HASH = 'e7f3a8d2b9c1f4e5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9'; // placeholder — ganti!
-// Cara buat hash: buka console browser, jalankan:
-// crypto.subtle.digest('SHA-256', new TextEncoder().encode('PIN_ASLI')).then(b=>console.log([...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')))
-// lalu ganti ADMIN_PIN_HASH di atas dengan hasilnya.
+/* ADMIN PIN */
+const ADMIN_PIN_HASH = 'e7f3a8d2b9c1f4e5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9';
+// Ganti dengan hash SHA-256 PIN Anda — lihat instruksi di chat
 
 async function sha256(str) {
   const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
   return [...new Uint8Array(buf)].map(x => x.toString(16).padStart(2, '0')).join('');
 }
-
 const adminModal = $('#adminModal');
-$('#adminLoginTrigger').addEventListener('click', () => {
-  adminModal.classList.add('open');
-  $('#adminPinInput').focus();
-});
-$('#cancelPinBtn').addEventListener('click', () => {
-  adminModal.classList.remove('open');
-  $('#adminPinInput').value = '';
-});
+$('#adminLoginTrigger').addEventListener('click', () => { adminModal.classList.add('open'); $('#adminPinInput').focus(); });
+$('#cancelPinBtn').addEventListener('click', () => { adminModal.classList.remove('open'); $('#adminPinInput').value = ''; });
 $('#submitPinBtn').addEventListener('click', verifyPin);
 $('#adminPinInput').addEventListener('keypress', e => { if(e.key === 'Enter') verifyPin(); });
+adminModal.addEventListener('click', e => { if(e.target === adminModal) { adminModal.classList.remove('open'); $('#adminPinInput').value = ''; } });
 
 async function verifyPin() {
   const pin = $('#adminPinInput').value;
@@ -928,8 +1073,9 @@ async function verifyPin() {
   }
 }
 
-// Init
+/* INIT */
 updateCartBadge();
+renderCart();
 </script>
 
 </body>
