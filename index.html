@@ -19,7 +19,6 @@ body[data-theme="rose"]{--bg:#1a0d10;--bg2:#211216;--card:#281418;--card2:#2f181
 body[data-theme="copper"]{--bg:#0c0c0e;--bg2:#111114;--card:#16161a;--card2:#1c1c22;--accent:#b87333;--soft:#e8a860;--text:#f0e6dc;--muted:#9a8a7a;--border:rgba(184,115,51,.2);--glow:rgba(184,115,51,.22);--grad:linear-gradient(100deg,#e8a860,#b87333)}
 body[data-theme="ivory"]{--bg:#faf6ef;--bg2:#f0e8db;--card:#fff;--card2:#fdfbf7;--accent:#b8912f;--soft:#8a6d1f;--text:#2e2418;--muted:#8a7a62;--border:rgba(184,145,47,.25);--glow:rgba(184,145,47,.15);--grad:linear-gradient(100deg,#b8912f,#8a6d1f)}
 body[data-theme="purple"]{--bg:#0e0714;--bg2:#140a1c;--card:#1a0d24;--card2:#21102d;--accent:#a34fde;--soft:#e2b8ff;--text:#f7ebff;--muted:#a38db8;--border:rgba(226,184,255,.15);--glow:rgba(163,79,222,.25);--grad:linear-gradient(100deg,#e2b8ff,#a34fde)}
-
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-height:1.65;-webkit-font-smoothing:antialiased;overflow-x:hidden;transition:background var(--t),color var(--t)}
@@ -27,8 +26,6 @@ body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;ba
 ::selection{background:var(--soft);color:var(--bg)}
 .skip-link{position:absolute;left:-9999px;top:0;background:var(--card);color:var(--text);padding:10px 16px;border-radius:0 0 8px 0;z-index:9999}
 .skip-link:focus{left:0}
-
-/* HEADER */
 header{position:sticky;top:0;z-index:100;background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);border-bottom:1px solid var(--border);padding:13px 22px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .brand{font-family:var(--font-title);font-size:23px;font-weight:700;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;display:flex;align-items:baseline;gap:8px}
 .brand span{font-family:var(--font-body);font-size:9px;font-weight:500;letter-spacing:3.5px;color:var(--muted);-webkit-text-fill-color:var(--muted);text-transform:uppercase}
@@ -54,8 +51,6 @@ nav a:hover{color:var(--soft);background:var(--bg2)}
 .swatch[data-c="copper"]{background:linear-gradient(135deg,#0c0c0e 50%,#b87333 50%)}
 .swatch[data-c="ivory"]{background:linear-gradient(135deg,#faf6ef 50%,#b8912f 50%)}
 .swatch[data-c="purple"]{background:linear-gradient(135deg,#0e0714 50%,#a34fde 50%)}
-
-/* HERO */
 .hero{text-align:center;padding:70px 20px 40px;animation:fadeUp .8s ease both}
 .badge-open{display:inline-flex;align-items:center;gap:7px;font-size:10.5px;letter-spacing:2px;text-transform:uppercase;color:var(--soft);background:color-mix(in srgb,var(--accent) 12%,transparent);border:1px solid var(--border);padding:7px 16px;border-radius:999px;margin-bottom:20px;font-weight:600}
 .badge-open .dot{width:7px;height:7px;border-radius:50%;background:#4ade80;animation:pulse 2s infinite}
@@ -70,13 +65,9 @@ nav a:hover{color:var(--soft);background:var(--bg2)}
 .btn-hero.primary:hover{transform:translateY(-2px);filter:brightness(1.08)}
 .btn-hero.ghost{background:var(--bg2);color:var(--text);border-color:var(--border)}
 .btn-hero.ghost:hover{border-color:var(--soft);color:var(--soft)}
-
-/* SECTION */
 .section-title{text-align:center;margin-bottom:24px;padding:0 20px}
 .section-title h2{font-family:var(--font-title);font-size:clamp(24px,3.5vw,32px);font-weight:600}
 .section-title p{color:var(--muted);font-size:13px;margin-top:6px}
-
-/* KATALOG */
 .catalog-wrap{margin:20px 0 60px;animation:fadeUp .8s .1s ease both}
 .catalog-toolbar{max-width:640px;margin:0 auto 10px;padding:0 24px;display:flex;flex-direction:column;gap:12px}
 .search-box{position:relative}
@@ -121,8 +112,6 @@ nav a:hover{color:var(--soft);background:var(--bg2)}
 .skeleton-card .s-line.short{width:60%}
 .empty-state{text-align:center;padding:40px 20px;color:var(--muted);font-size:13px;width:100%}
 .empty-state svg{width:44px;height:44px;opacity:.4;margin-bottom:12px}
-
-/* FEED */
 .feed-wrap{max-width:640px;margin:0 auto;padding:0 20px 70px;animation:fadeUp .8s .2s ease both}
 .feed{display:flex;flex-direction:column;gap:26px}
 .post{background:linear-gradient(165deg,var(--card),var(--card2));border:1px solid var(--border);border-radius:var(--r);overflow:hidden;animation:fadeUp .6s ease both}
@@ -171,8 +160,6 @@ a.post-location:hover{text-decoration:underline}
 .comment-form input:focus{border-color:var(--soft);box-shadow:0 0 0 3px var(--glow)}
 .comment-form button{background:var(--grad);color:var(--bg);border:none;border-radius:999px;padding:0 18px;font-family:var(--font-body);font-weight:700;font-size:11px;letter-spacing:.6px;text-transform:uppercase;cursor:pointer;transition:.3s}
 .comment-form button:hover{filter:brightness(1.1);transform:scale(1.03)}
-
-/* CART */
 .cart-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(3px);z-index:500;opacity:0;visibility:hidden;transition:.35s}
 .cart-overlay.open{opacity:1;visibility:visible}
 .cart-drawer{position:fixed;top:0;right:0;height:100%;width:min(420px,92vw);background:var(--bg);border-left:1px solid var(--border);z-index:501;transform:translateX(100%);transition:transform .4s cubic-bezier(.2,.8,.2,1);display:flex;flex-direction:column;box-shadow:-20px 0 60px rgba(0,0,0,.5)}
@@ -199,8 +186,6 @@ a.post-location:hover{text-decoration:underline}
 .btn-checkout{width:100%;background:var(--grad);color:var(--bg);border:none;padding:14px;border-radius:12px;font-family:var(--font-body);font-weight:700;font-size:13px;letter-spacing:.5px;text-transform:uppercase;cursor:pointer;transition:.3s;display:flex;align-items:center;justify-content:center;gap:8px}
 .btn-checkout:hover{filter:brightness(1.1);transform:translateY(-1px)}
 .btn-checkout:disabled{opacity:.5;cursor:not-allowed;transform:none}
-
-/* MODALS */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.82);backdrop-filter:blur(6px);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px;animation:fadeIn .25s ease}
 .modal-overlay.open{display:flex}
 .modal-panel{background:var(--card);border:1px solid var(--border);border-radius:20px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;box-shadow:0 30px 60px -20px rgba(0,0,0,.7);animation:fadeUp .3s ease;position:relative}
@@ -222,8 +207,6 @@ a.post-location:hover{text-decoration:underline}
 .rate-stars button:hover,.rate-stars button.hover,.rate-stars button.active{color:#f7c948;transform:scale(1.1)}
 .rate-info{font-size:11.5px;color:var(--muted);margin-top:6px}
 .rate-info.done{color:var(--soft)}
-
-/* FORM CHECKOUT */
 .form-body{padding:24px}
 .form-body h3{font-family:var(--font-title);font-size:22px;font-weight:600;margin-bottom:6px}
 .form-body .sub{font-size:12.5px;color:var(--muted);margin-bottom:20px}
@@ -237,8 +220,6 @@ a.post-location:hover{text-decoration:underline}
 .summary .row{display:flex;justify-content:space-between;padding:4px 0}
 .summary .row.total{border-top:1px solid var(--border);padding-top:10px;margin-top:8px;font-weight:700;font-size:15px}
 .summary .row.total span:last-child{color:var(--soft)}
-
-/* LIGHTBOX */
 #lightbox{position:fixed;inset:0;background:rgba(0,0,0,.94);z-index:9999;display:none;align-items:center;justify-content:center;padding:20px;animation:fadeIn .25s ease}
 #lightbox.open{display:flex}
 #lightbox img,#lightbox video{max-width:92%;max-height:90vh;object-fit:contain;border-radius:10px}
@@ -248,31 +229,23 @@ a.post-location:hover{text-decoration:underline}
 #lightboxPrev{left:20px;top:50%;transform:translateY(-50%)}
 #lightboxNext{right:20px;top:50%;transform:translateY(-50%)}
 #lightboxPrev:hover,#lightboxNext:hover{background:rgba(255,255,255,.28)}
-
-/* FOOTER */
 footer{text-align:center;padding:50px 20px 100px;border-top:1px solid var(--border);margin-top:20px;display:flex;flex-direction:column;align-items:center;gap:14px}
 footer .brand{font-size:20px}
 .footer-hours{display:inline-flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);background:var(--bg2);border:1px solid var(--border);padding:8px 18px;border-radius:999px}
 footer p{color:var(--muted);font-size:11px;letter-spacing:1.2px;text-transform:uppercase}
 #adminLoginTrigger{background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:11px;letter-spacing:1.2px;margin-top:4px;opacity:.55;transition:.25s;padding:6px 12px;border-radius:999px}
 #adminLoginTrigger:hover{opacity:1;color:var(--soft);background:var(--bg2)}
-
-/* FLOATING */
-#floatWa{position:fixed;bottom:78px;right:22px;width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#25d366,#128c7e);color:#fff;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 30px -8px rgba(37,211,102,.6);z-index:90;transition:.35s;position:fixed}
+#floatWa{position:fixed;bottom:78px;right:22px;width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#25d366,#128c7e);color:#fff;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 30px -8px rgba(37,211,102,.6);z-index:90;transition:.35s}
 #floatWa:hover{transform:scale(1.08)}
 #floatWa svg{width:26px;height:26px}
 #backTop{position:fixed;bottom:22px;right:22px;width:46px;height:46px;border-radius:50%;background:var(--grad);color:var(--bg);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;opacity:0;visibility:hidden;transform:translateY(10px);transition:.35s;z-index:90;box-shadow:0 10px 30px -8px var(--glow)}
 #backTop.show{opacity:1;visibility:visible;transform:translateY(0)}
 #backTop:hover{transform:translateY(-3px);filter:brightness(1.1)}
-
-/* TOAST */
 #toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(30px);background:var(--card);color:var(--text);border:1px solid var(--border);padding:13px 24px;border-radius:999px;font-size:13px;font-weight:500;box-shadow:0 20px 50px -12px rgba(0,0,0,.6);opacity:0;pointer-events:none;transition:.4s;z-index:10000;max-width:90vw}
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 #toast.error{border-color:rgba(248,113,113,.4);color:#fca5a5}
-
 @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-
 @media(max-width:600px){
   header{padding:12px 16px}
   .brand{font-size:20px}
@@ -464,6 +437,10 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+/* ===== KONFIGURASI TOKO ===== */
+const DEFAULT_WA = '6285737447844'; // +62 857-3744-7844
+const ADMIN_PIN_OBF = 'bGFsYXBuZW5ha0o='; // base64 dari "lalapnenakJ"
+
 const $ = s => document.querySelector(s);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt = n => 'Rp ' + (Number(n)||0).toLocaleString('id-ID');
@@ -485,7 +462,7 @@ const timeAgo = ts => {
   return Math.floor(diff/86400) + ' hari lalu';
 };
 
-/* TEMA */
+/* ===== TEMA ===== */
 const savedTheme = localStorage.getItem('serabimu_theme') || 'noir';
 document.body.setAttribute('data-theme', savedTheme);
 const dropdown = $('#themeDropdown');
@@ -506,16 +483,16 @@ document.querySelectorAll('.theme-menu button').forEach(btn => {
   });
 });
 
-/* JAM TOKO + COUNTDOWN */
+/* ===== JAM TOKO & COUNTDOWN ===== */
 let storeHours = { open:'08:00', close:'21:00', whatsapp:'' };
-let storeWa = '';
+let storeWa = DEFAULT_WA;
 getDoc(doc(db, 'settings', 'store_hours')).then(snap => {
   if(snap.exists()) {
     const d = snap.data();
     storeHours.open = d.open || '08:00';
     storeHours.close = d.close || '21:00';
     storeHours.whatsapp = d.whatsapp || '';
-    storeWa = storeHours.whatsapp;
+    storeWa = storeHours.whatsapp || DEFAULT_WA;
   }
   updateOpenStatus();
 }).catch(() => updateOpenStatus());
@@ -548,13 +525,13 @@ function updateOpenStatus() {
 }
 setInterval(updateOpenStatus, 30000);
 
-/* WISHLIST & RATED */
+/* ===== WISHLIST & RATED ===== */
 let wishlist = new Set(JSON.parse(localStorage.getItem('serabimu_wishlist') || '[]'));
 let rated = new Set(JSON.parse(localStorage.getItem('serabimu_rated') || '[]'));
 const saveWishlist = () => localStorage.setItem('serabimu_wishlist', JSON.stringify([...wishlist]));
 const saveRated = () => localStorage.setItem('serabimu_rated', JSON.stringify([...rated]));
 
-/* KATALOG */
+/* ===== KATALOG ===== */
 const catalogSlider = $('#catalogSlider');
 const searchInput = $('#searchInput');
 const categoryChips = $('#categoryChips');
@@ -579,9 +556,7 @@ function renderChips() {
   allProducts.forEach(p => { if(p.category) cats.add(p.category); });
   let html = `<button class="chip ${activeCategory==='all'?'active':''}" data-cat="all">Semua</button>`;
   if(wishlist.size > 0) html += `<button class="chip ${activeCategory==='wishlist'?'active':''}" data-cat="wishlist">❤️ Favorit (${wishlist.size})</button>`;
-  cats.forEach(c => {
-    html += `<button class="chip ${activeCategory===c?'active':''}" data-cat="${esc(c)}">${esc(c)}</button>`;
-  });
+  cats.forEach(c => { html += `<button class="chip ${activeCategory===c?'active':''}" data-cat="${esc(c)}">${esc(c)}</button>`; });
   categoryChips.innerHTML = html;
   categoryChips.querySelectorAll('.chip').forEach(chip => {
     chip.addEventListener('click', () => { activeCategory = chip.dataset.cat; renderChips(); renderCatalog(); });
@@ -651,10 +626,9 @@ function renderCatalog() {
     });
   });
 }
-
 searchInput.addEventListener('input', e => { searchTerm = e.target.value.trim(); renderCatalog(); });
 
-/* MODAL PRODUK */
+/* ===== MODAL PRODUK ===== */
 const productModal = $('#productModal');
 const productModalBody = $('#productModalBody');
 
@@ -684,26 +658,18 @@ function openProductModal(id) {
         <p>Beri Rating:</p>
         ${ratingStars}
       </div>
-    </div>
-  `;
-
+    </div>`;
   productModal.classList.add('open');
 
-  productModalBody.querySelector('#pmAddCart').addEventListener('click', () => {
-    addToCart(p);
-    closeProductModal();
-  });
+  productModalBody.querySelector('#pmAddCart').addEventListener('click', () => { addToCart(p); closeProductModal(); });
   productModalBody.querySelector('#pmBuyNow').addEventListener('click', () => {
     closeProductModal();
-    const item = { title: p.title, price: typeof p.price === 'number' ? p.price : 0, qty: 1 };
-    openCheckout([item]);
+    openCheckout([{ title: p.title, price: typeof p.price === 'number' ? p.price : 0, qty: 1 }]);
   });
   productModalBody.querySelectorAll('.rate-stars button').forEach(btn => {
     btn.addEventListener('mouseenter', () => {
       const v = +btn.dataset.v;
-      productModalBody.querySelectorAll('.rate-stars button').forEach(b => {
-        b.classList.toggle('hover', +b.dataset.v <= v);
-      });
+      productModalBody.querySelectorAll('.rate-stars button').forEach(b => b.classList.toggle('hover', +b.dataset.v <= v));
     });
     btn.addEventListener('mouseleave', () => {
       productModalBody.querySelectorAll('.rate-stars button').forEach(b => b.classList.remove('hover'));
@@ -719,10 +685,7 @@ async function submitRating(productId, value) {
   if(rated.has(productId)) { toast('Anda sudah menilai produk ini'); return; }
   try {
     await addDoc(collection(db, 'ratings'), { productId, value, createdAt: serverTimestamp() });
-    await updateDoc(doc(db, 'products', productId), {
-      totalRating: increment(value),
-      ratingCount: increment(1)
-    });
+    await updateDoc(doc(db, 'products', productId), { totalRating: increment(value), ratingCount: increment(1) });
     rated.add(productId); saveRated();
     const p = allProducts.find(x => x.id === productId);
     if(p) { p.totalRating = (p.totalRating||0) + value; p.ratingCount = (p.ratingCount||0) + 1; }
@@ -732,7 +695,7 @@ async function submitRating(productId, value) {
   } catch(e) { toast('Gagal: ' + e.message, true); }
 }
 
-/* CART */
+/* ===== CART ===== */
 let cart = JSON.parse(localStorage.getItem('serabimu_cart') || '[]');
 const cartDrawer = $('#cartDrawer'), cartOverlay = $('#cartOverlay'), cartBody = $('#cartBody'), cartCountEl = $('#cartCount'), cartTotal = $('#cartTotal');
 
@@ -747,10 +710,7 @@ function addToCart(p, btn) {
   if(ex) ex.qty++;
   else cart.push({ id: p.id, title: p.title, price: typeof p.price === 'number' ? p.price : 0, priceRaw: p.price, imageUrl: p.imageUrl || '', qty: 1 });
   saveCart(); renderCart();
-  if(btn) {
-    btn.classList.add('added'); btn.textContent = '✓ Ditambahkan';
-    setTimeout(() => { btn.classList.remove('added'); btn.textContent = '+ Pesan'; }, 1400);
-  }
+  if(btn) { btn.classList.add('added'); btn.textContent = '✓ Ditambahkan'; setTimeout(() => { btn.classList.remove('added'); btn.textContent = '+ Pesan'; }, 1400); }
   toast('Ditambahkan ke keranjang');
 }
 function renderCart() {
@@ -774,8 +734,7 @@ function renderCart() {
           <button class="cart-item-remove" data-i="${i}" data-a="del">Hapus</button>
         </div>
       </div>
-    </div>
-  `).join('');
+    </div>`).join('');
   cartBody.querySelectorAll('.qty-btn, .cart-item-remove').forEach(btn => {
     btn.addEventListener('click', () => {
       const i = +btn.dataset.i, a = btn.dataset.a;
@@ -785,8 +744,7 @@ function renderCart() {
       saveCart(); renderCart();
     });
   });
-  const total = cart.reduce((s,i) => s + (i.price * i.qty), 0);
-  cartTotal.textContent = fmt(total);
+  cartTotal.textContent = fmt(cart.reduce((s,i) => s + (i.price * i.qty), 0));
   $('#checkoutBtn').disabled = false;
 }
 function openCart() { cartDrawer.classList.add('open'); cartOverlay.classList.add('open'); }
@@ -794,24 +752,19 @@ function closeCart() { cartDrawer.classList.remove('open'); cartOverlay.classLis
 $('#cartBtn').addEventListener('click', openCart);
 $('#cartClose').addEventListener('click', closeCart);
 cartOverlay.addEventListener('click', closeCart);
-
 window.addEventListener('storage', e => {
-  if(e.key === 'serabimu_cart') {
-    cart = JSON.parse(e.newValue || '[]');
-    renderCart();
-  }
+  if(e.key === 'serabimu_cart') { cart = JSON.parse(e.newValue || '[]'); renderCart(); }
 });
 
-/* CHECKOUT */
+/* ===== CHECKOUT ===== */
 const checkoutModal = $('#checkoutModal');
 let checkoutItems = [];
 
 function openCheckout(items) {
   checkoutItems = items;
   const summary = $('#checkoutSummary');
-  summary.innerHTML = items.map(it =>
-    `<div class="row"><span>${esc(it.title)} × ${it.qty}</span><span>${fmt(it.price * it.qty)}</span></div>`
-  ).join('') + `<div class="row total"><span>Total</span><span>${fmt(items.reduce((s,i)=>s+i.price*i.qty,0))}</span></div>`;
+  summary.innerHTML = items.map(it => `<div class="row"><span>${esc(it.title)} × ${it.qty}</span><span>${fmt(it.price * it.qty)}</span></div>`).join('')
+    + `<div class="row total"><span>Total</span><span>${fmt(items.reduce((s,i)=>s+i.price*i.qty,0))}</span></div>`;
   $('#coName').value = localStorage.getItem('serabimu_name') || '';
   $('#coPhone').value = localStorage.getItem('serabimu_phone') || '';
   checkoutModal.classList.add('open');
@@ -824,11 +777,9 @@ $('#checkoutBtn').addEventListener('click', () => {
 });
 $('#checkoutClose').addEventListener('click', closeCheckout);
 checkoutModal.addEventListener('click', e => { if(e.target === checkoutModal) closeCheckout(); });
-
 $('#coType').addEventListener('change', e => {
   $('#addressField').style.display = e.target.value === 'Delivery' ? 'block' : 'none';
 });
-
 $('#checkoutForm').addEventListener('submit', e => {
   e.preventDefault();
   const fd = new FormData(e.target);
@@ -839,10 +790,8 @@ $('#checkoutForm').addEventListener('submit', e => {
   const notes = (fd.get('notes')||'').trim();
   if(!name || !phone) { toast('Nama & HP wajib diisi', true); return; }
   if(type === 'Delivery' && !address) { toast('Alamat wajib untuk delivery', true); return; }
-
   localStorage.setItem('serabimu_name', name);
   localStorage.setItem('serabimu_phone', phone);
-
   let msg = '*Pesanan Baru — Serabimu*\n\n';
   msg += `👤 Nama: ${name}\n📱 HP: ${phone}\n📦 Tipe: ${type}\n`;
   if(type === 'Delivery') msg += `📍 Alamat: ${address}\n`;
@@ -850,21 +799,18 @@ $('#checkoutForm').addEventListener('submit', e => {
   msg += '\n*Detail Pesanan:*\n';
   checkoutItems.forEach((it,i) => { msg += `${i+1}. ${it.title} × ${it.qty} = ${fmt(it.price * it.qty)}\n`; });
   msg += `\n*Total: ${fmt(checkoutItems.reduce((s,i)=>s+i.price*i.qty,0))}*\n\nMohon konfirmasi. Terima kasih 🙏`;
-
-  const wa = storeWa || '6280000000000';
-  window.open(`https://wa.me/${wa}?text=${encodeURIComponent(msg)}`, '_blank');
+  window.open(`https://wa.me/${storeWa}?text=${encodeURIComponent(msg)}`, '_blank');
   closeCheckout();
   toast('Membuka WhatsApp...');
 });
 
-/* FLOATING WA */
+/* ===== FLOATING WA ===== */
 $('#floatWa').addEventListener('click', () => {
-  const wa = storeWa || '6280000000000';
   const msg = 'Halo Serabimu, saya ingin bertanya...';
-  window.open(`https://wa.me/${wa}?text=${encodeURIComponent(msg)}`, '_blank');
+  window.open(`https://wa.me/${storeWa}?text=${encodeURIComponent(msg)}`, '_blank');
 });
 
-/* FEED */
+/* ===== FEED ===== */
 const publicFeedList = $('#publicFeedList');
 const likedPosts = new Set(JSON.parse(localStorage.getItem('serabimu_liked') || '[]'));
 const commentUnsubs = new Map();
@@ -873,10 +819,7 @@ const replyState = new Map();
 const qPosts = query(collection(db, 'posts'), orderBy('createdAt', 'desc'));
 onSnapshot(qPosts, snap => {
   publicFeedList.innerHTML = '';
-  if(snap.empty) {
-    publicFeedList.innerHTML = `<div class="empty-state"><div>Belum ada kabar toko saat ini.</div></div>`;
-    return;
-  }
+  if(snap.empty) { publicFeedList.innerHTML = `<div class="empty-state"><div>Belum ada kabar toko saat ini.</div></div>`; return; }
   snap.forEach(docSnap => {
     const d = docSnap.data(); const postId = docSnap.id;
     const liked = likedPosts.has(postId);
@@ -926,20 +869,17 @@ onSnapshot(qPosts, snap => {
       localStorage.setItem('serabimu_liked', JSON.stringify([...likedPosts]));
       try { await updateDoc(doc(db, 'posts', postId), { likes: increment(1) }); } catch(e){ console.warn(e); }
     });
-
     el.querySelector('.btn-share-post').addEventListener('click', async () => {
       const url = location.origin + location.pathname + '#' + postId;
       const shareData = { title:'Serabimu', text: d.caption || 'Cek postingan Serabimu', url };
       if(navigator.share) { try { await navigator.share(shareData); } catch {} }
       else { try { await navigator.clipboard.writeText(url); toast('Link disalin'); } catch { toast('Gagal menyalin', true); } }
     });
-
     el.querySelector('.reply-chip button').addEventListener('click', () => {
       replyState.delete(postId);
       el.querySelector('.reply-chip').classList.remove('show');
       el.querySelector('input').placeholder = 'Tulis komentar...';
     });
-
     el.querySelector('.comment-form').addEventListener('submit', async e => {
       e.preventDefault();
       const input = el.querySelector('input');
@@ -949,16 +889,13 @@ onSnapshot(qPosts, snap => {
       if(!userName) { userName = prompt('Nama Anda untuk berkomentar:') || 'Pelanggan Setia'; localStorage.setItem('serabimu_user_name', userName); }
       const parent = replyState.get(postId);
       try {
-        await addDoc(collection(db, 'comments'), {
-          postId, parentId: parent ? parent.commentId : '', name: userName, text, createdAt: serverTimestamp()
-        });
+        await addDoc(collection(db, 'comments'), { postId, parentId: parent ? parent.commentId : '', name: userName, text, createdAt: serverTimestamp() });
         input.value = '';
         replyState.delete(postId);
         el.querySelector('.reply-chip').classList.remove('show');
         input.placeholder = 'Tulis komentar...';
       } catch(err) { toast('Gagal kirim: ' + err.message, true); }
     });
-
     loadCommentsForPost(postId);
   });
 }, err => { publicFeedList.innerHTML = `<div class="empty-state">Gagal memuat feed</div>`; console.error(err); });
@@ -1006,7 +943,7 @@ function renderCommentTree(comment, map, postId) {
   return div;
 }
 
-/* LIGHTBOX */
+/* ===== LIGHTBOX ===== */
 const lightbox = $('#lightbox'), lightboxContent = $('#lightboxContent');
 let lbItems = [], lbIdx = 0;
 document.addEventListener('click', e => {
@@ -1037,19 +974,12 @@ document.addEventListener('keydown', e => {
   if(e.key === 'ArrowRight') $('#lightboxNext').click();
 });
 
-/* BACK TOP */
+/* ===== BACK TOP ===== */
 const backTop = $('#backTop');
 window.addEventListener('scroll', () => backTop.classList.toggle('show', window.scrollY > 400));
 backTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
-/* ADMIN PIN */
-const ADMIN_PIN_HASH = 'e7f3a8d2b9c1f4e5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9';
-// Ganti dengan hash SHA-256 PIN Anda — lihat instruksi di chat
-
-async function sha256(str) {
-  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
-  return [...new Uint8Array(buf)].map(x => x.toString(16).padStart(2, '0')).join('');
-}
+/* ===== ADMIN PIN ===== */
 const adminModal = $('#adminModal');
 $('#adminLoginTrigger').addEventListener('click', () => { adminModal.classList.add('open'); $('#adminPinInput').focus(); });
 $('#cancelPinBtn').addEventListener('click', () => { adminModal.classList.remove('open'); $('#adminPinInput').value = ''; });
@@ -1057,11 +987,12 @@ $('#submitPinBtn').addEventListener('click', verifyPin);
 $('#adminPinInput').addEventListener('keypress', e => { if(e.key === 'Enter') verifyPin(); });
 adminModal.addEventListener('click', e => { if(e.target === adminModal) { adminModal.classList.remove('open'); $('#adminPinInput').value = ''; } });
 
-async function verifyPin() {
+function verifyPin() {
   const pin = $('#adminPinInput').value;
   if(!pin) return;
-  const hash = await sha256(pin);
-  if(hash === ADMIN_PIN_HASH) {
+  let expected = '';
+  try { expected = atob(ADMIN_PIN_OBF); } catch(e) { expected = ''; }
+  if(pin === expected) {
     sessionStorage.setItem('isAdmin', 'true');
     adminModal.classList.remove('open');
     $('#adminPinInput').value = '';
@@ -1073,7 +1004,7 @@ async function verifyPin() {
   }
 }
 
-/* INIT */
+/* ===== INIT ===== */
 updateCartBadge();
 renderCart();
 </script>
